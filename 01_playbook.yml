@@ -26,7 +26,3 @@
      cisco.ios.ios_facts:
       gather_subset: interfaces
      register: int
-
-   - name: print int
-     debug:
-      var: int
