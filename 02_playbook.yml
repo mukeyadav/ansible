@@ -1,0 +1,15 @@
+---
+- name: Network Getting Started First Playbook
+  gather_facts: true
+  hosts: Switches
+  tasks:
+
+   - name: Get config from routers
+     cisco.ios.ios_facts:
+      gather_subset: min
+      gather_network_resources: interfaces
+     register: interfaces
+
+   - name: print subset
+     debug:
+      var: interfaces
