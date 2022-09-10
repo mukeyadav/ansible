@@ -1,0 +1,28 @@
+[all:children]
+cisco
+junos
+
+
+
+[cisco]
+IOS ansible_host=10.1.1.101
+IOS-1 ansible_host=10.1.1.103
+
+[cisco:vars]
+# Must match Python that NAPALM is installed into.
+ansible_python_interpreter=/usr/bin/python3
+ansible_network_os=ios
+ansible_connection=network_cli
+ansible_user=cisco
+ansible_ssh_pass=cisco
+
+[junos]
+Juniper ansible_host=10.1.1.104
+
+[junos:vars]
+# Must match Python that NAPALM is installed into.
+ansible_python_interpreter=/usr/bin/python3
+ansible_network_os=junos
+ansible_connection=network_cli
+ansible_user=root
+ansible_ssh_pass=root123

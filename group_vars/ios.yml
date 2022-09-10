@@ -3,3 +3,4 @@ ansible_password: cisco
 ansible_network_os: cisco.ios.ios
 ansible_connection: ansible.netcommon.network_cli
 napalm_platform: ios
+ansible_python_interpreter: /usr/bin/python3

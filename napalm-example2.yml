@@ -1,13 +1,16 @@
 ---
 
 - name: Napalm playbook
-  hosts: all
+  hosts: ios
   gather_facts: false
 
   tasks:
     - name: Get facts using napalm
       napalm.napalm.napalm_get_facts:
-        filter: config
+        hostname: "{{ inventory_hostname }}"
+        username: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        dev_os: "{{ napalm_platform }}"
 
       register: result
 
