@@ -1,0 +1,19 @@
+---
+- name : Testing loop
+  hosts: iosxr
+  gather_facts: false
+
+  tasks:
+  - name: configuration with loop
+    vars:
+      server:
+        - "1.1.1.1"
+        - "2.2.2.2"
+        - "3.3.3.3"
+        - "4.4.4.4"
+    cisco.iosxr.iosxr_ntp_global:
+      config:
+        peers:
+          - peer: "{{ item }}"
+            version: 2
+    loop: "{{ server }}"

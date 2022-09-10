@@ -1,0 +1,4 @@
+set routing-options router-id {{ ospf.rid }}
+{% for ntwk in ospf.networks %}
+set protocols ospf area {{ ntwk.area }} interface {{ ntwk.interface }}
+{% endfor %}

@@ -1,0 +1,30 @@
+---
+- name: Network Getting Started First Playbook
+  gather_facts: true
+  hosts: ios
+
+  tasks:
+    - name: Configure banner from file
+      cisco.ios.ios_facts:
+        gather_subset: all
+      register: result
+
+    - debug:
+        msg: "{{ result.ansible_net_serialnum }}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,28 @@
+---
+
+- name: Multivendor bgp-template configuration
+  hosts: Routers
+  gather_facts: false
+
+  tasks:
+    - name: ios-config
+      cisco.ios.ios_config:
+        src: ios_bgp.j2
+      register: ios_bgp_config
+      when: ansible_network_os == 'cisco.ios.ios'
+
+    - name: junos-config
+      junipernetworks.junos.junos_config:
+        src: junos_bgp.j2
+      register: junos_bgp_config
+      when: ansible_network_os == 'junipernetworks.junos.junos'
+
+    - name: print ios config
+      debug:
+        msg: "{{ ios_bgp_config }}"
+      when: ansible_network_os == 'cisco.ios.ios'
+
+    - name: print junos config
+      debug:
+        msg: "{{ junos_bgp_config }}"
+      when: ansible_network_os == 'junipernetworks.junos.junos'

@@ -1,0 +1,4 @@
+set routing-options autonomous-system {{ bgp.asn }}
+{% for neigh in bgp.neighbors %}
+set protocols bgp group external neighbor {{ neigh.neighbor }} peer-as {{ neigh.peer_as }}
+{% endfor %}

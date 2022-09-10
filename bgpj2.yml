@@ -1,0 +1,10 @@
+---
+
+- name: first jinja template
+  hosts: ios
+  gather_facts: false
+
+  tasks:
+  - name: BGP config
+    cisco.ios.ios_config:
+      src: bgp.j2

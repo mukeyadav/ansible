@@ -1,0 +1,43 @@
+---
+
+- name: Multivendor interfaces configuration
+  hosts: Routers
+  gather_facts: false
+
+  tasks:
+    - name: cisco ios interface config
+      cisco.ios.ios_interfaces:
+        config:
+        - name: GigabitEthernet0/2
+          description: Configured and Merged by Ansible Network
+          enabled: true
+        - name: GigabitEthernet0/3
+          description: Configured and Merged by Ansible Network
+          mtu: 2800
+          enabled: false
+          speed: 100
+          duplex: full
+      register: ios_config
+      when: ansible_network_os == 'cisco.ios.ios'
+
+    - name: Junos interface config
+      junipernetworks.junos.junos_interfaces:
+        config:
+        - name: ge-0/0/1
+          description: Configured by Ansible-1
+          speed: 1g
+          mtu: 1800
+        - name: ge-0/0/2
+          description: Configured by Ansible -2
+      register: junos_config
+      when: ansible_network_os == 'junipernetworks.junos.junos'
+
+    - name: print ios config
+      debug:
+        msg: "{{ ios_config.commands }}"
+      when: ansible_network_os == 'cisco.ios.ios'
+
+    - name: print junos config
+      debug:
+        msg: "{{ junos_config.commands[0] }}"
+      when: ansible_network_os == 'junipernetworks.junos.junos'

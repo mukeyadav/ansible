@@ -1,0 +1,18 @@
+---
+
+ospf:
+  rid: "4.4.4.4"
+  networks:
+    - interface: "ge-0/0/2.0"
+      area: "0.0.0.0"
+
+    - interface: "ge-0/0/3.0"
+      area: "0.0.0.1"
+
+bgp:
+  asn: "104"
+  neighbors:
+    - neighbor: "10.1.1.103"
+      peer_as: "103"
+    - neighbor: "10.1.1.101"
+      peer_as: "101"

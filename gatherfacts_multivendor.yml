@@ -1,0 +1,41 @@
+---
+
+- name: Gather Facts in Multi-vendor
+  hosts: Routers
+  gather_facts: true
+
+  tasks:
+  - name: cisco ios facts
+    cisco.ios.ios_facts:
+      gather_subset: config
+    register: ios_facts
+    when: ansible_network_os == 'cisco.ios.ios'
+
+  - name: print ios facts
+    debug:
+      msg: "{{ ios_facts.ansible_facts.ansible_net_config.split('\n') }}"
+    when: ansible_network_os == 'cisco.ios.ios'
+
+  - name: junos facts
+    junipernetworks.junos.junos_facts:
+      gather_subset: config
+    register: junos_facts
+    when: ansible_network_os == 'junipernetworks.junos.junos'
+
+  - name: print junos facts
+    debug:
+      msg: "{{ junos_facts.ansible_facts.ansible_net_config.split('\n') }}"
+    when: ansible_network_os == 'junipernetworks.junos.junos'
+
+
+#  - name: cisco ios xr facts
+#    cisco.iosxr.iosxr_facts:
+#      gather_subset: config
+#    register: iosxr_facts
+#    when: " ansible_net_system == 'iosxr'"
+
+#  - name: print iosxr facts
+#    debug:
+#      msg: "{{ iosxr_facts.ansible_facts.ansible_net_config.split('\n') }}"
+#    when: " ansible_net_system == 'iosxr'"
+

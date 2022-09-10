@@ -1,0 +1,8 @@
+---
+- name : Testing Conditional
+  hosts: Routers
+  gather_facts: true
+
+  tasks:
+    - name: Conditional 
+      debug:

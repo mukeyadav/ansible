@@ -1,0 +1,8 @@
+---
+- name : Testing loop
+  hosts: ios
+  gather_facts: true
+
+  tasks:
+    - debug:
+        msg: "{{ ansible_facts.net_hostname}} have the {{ ansible_net_version }} and {{ ansible_net_serialnum }}"

@@ -1,0 +1,3 @@
+{% for inf in interface.name %}
+set interfaces {{ inf.int }} description {{ inf.description }}
+{% endfor %}
