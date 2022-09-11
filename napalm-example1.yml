@@ -1,7 +1,7 @@
 ---
 
 - name: Napalm playbook
-  hosts: all
+  hosts: arista
   gather_facts: false
 
   tasks:
@@ -13,4 +13,4 @@
 
     - name: print
       debug:
-        msg: "{{ result }}"
+        msg: "{{ result.ansible_facts.napalm_config.running.split('\n') }}"

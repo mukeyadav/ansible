@@ -1,6 +1,7 @@
 [all:children]
 cisco
 junos
+arista
 
 
 
@@ -26,3 +27,20 @@ ansible_network_os=junos
 ansible_connection=network_cli
 ansible_user=root
 ansible_ssh_pass=root123
+
+[arista]
+Arista ansible_host=10.1.1.105
+Arista-1 ansible_host=10.1.1.106
+
+[arista:vars]
+# Must match Python that NAPALM is installed into.
+ansible_python_interpreter=/usr/bin/python3
+ansible_network_os=eos
+# Continue using 'network_cli' (NAPALM module itself will use eAPI)
+ansible_connection=httpapi
+ansible_user=arista
+ansible_ssh_pass=arista
+ansible_become=yes
+ansible_become_method=enable
+ansible_httpapi_use_ssl=true
+ansible_httpapi_validate_certs=false
