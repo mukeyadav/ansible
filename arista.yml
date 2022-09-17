@@ -1,0 +1,13 @@
+---
+
+- name: testing arista
+  hosts: arista
+
+  tasks:
+    - name: run show version on remote devices
+      arista.eos.eos_command:
+        commands: show version
+      register: result
+
+    - debug:
+        msg: "{{ result }}"
