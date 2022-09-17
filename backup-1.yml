@@ -1,0 +1,41 @@
+---
+
+- name: Task-1 setup date and time
+  hosts: localhost
+
+  tasks:
+    - name: Get date and time
+      ansible.builtin.setup:
+        filter:
+          - "ansible_date_time"
+    - name: Set TD as fact
+      set_fact:
+        TD: "{{ ansible_date_time.date }}"
+
+    - name: creating directories
+      file:
+        path: "Backups/{{ TD }}"
+        state: directory
+      run_once: true
+
+- name: Cisco ios backup
+  hosts: ios
+  
+  tasks:
+    - name: IOS command
+      vars:
+        list:
+          - show run
+          - show version
+          - show ip interface brief
+          - show cdp neigh
+      cisco.ios.ios_command:
+        commands: "{{ list }}"
+
+      register: result
+
+    - name: copy backup to file
+      copy:
+        content: "{{ result }}"
+        dest: "Backups/{{ hostvars.localhost.TD }}/{{ inventory_hostname }}-config.txt"
+
