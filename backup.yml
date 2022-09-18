@@ -26,9 +26,6 @@
       cisco.ios.ios_command:
         commands:
           - show run
-          - show version
-          - show ip interface brief
-          - show cdp neigh
       register: config
 
     - name: copy backup to file
