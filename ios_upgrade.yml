@@ -1,0 +1,121 @@
+---
+- name: ios upgrade
+  hosts: 7200R
+
+  vars:
+    upgrade_ios_version: 152-4.S6
+
+  tasks:
+    - name: check current ios version
+      cisco.ios.ios_facts:
+
+    - name: print
+      debug:
+        msg:
+          - "current IOS version is {{ ansible_net_version }}"
+          - "Upgrade IOS image is 152-4.S6"
+      
+    - debug:
+        msg:
+          - "Image is not compliant and will be upgraded"
+      when: ansible_net_version != upgrade_ios_version
+
+#Create backup folder
+
+- hosts: localhost
+  
+  tasks:
+    - name: Get date and time
+      ansible.builtin.setup:
+        filter:
+          - "ansible_date_time"
+    - name: set TD as fact
+      set_fact:
+        TD: "{{ ansible_date_time.date }}"
+
+    - name: creating directories
+      file:
+        path: "~/Backups/{{ TD }}"
+        state: directory
+      run_once: true
+
+#Backup running config
+
+- hosts: 7200R
+
+  tasks:
+    - name: Running config backup
+      cisco.ios.ios_command:
+        commands: show run
+      register: config
+
+    - name: save running config to backup folder
+      copy:
+        content: "{{ config.stdout[0] }}"
+        dest: "~/Backups/{{ hostvars.localhost.TD }}/{{ inventory_hostname }}-config.txt"
+
+#Save current config before ios-upgrade
+
+    - name: Save running config
+      cisco.ios.ios_config:
+        save_when: always
+
+#Copy image to router
+
+    - name: copy image to router
+      ansible.netcommon.net_put:
+        src: "/tftp/c7200-adventerprisek9-mz.152-4.S6.image"
+        dest: "flash:/c7200-adventerprisek9-mz.152-4.S6.image"
+      vars:
+        ansible_command_timeout: 600
+
+## Change the Boot Variable to the new image
+
+    - name: Change Boot Variable to new image
+      cisco.ios.ios_config:
+        commands:
+          - "boot system flash:c7200-adventerprisek9-mz.152-4.S6.image"
+        save_when: always
+
+## Reload the device 
+    - name: Reload the device
+      cisco.ios.ios_command:
+        commands: reload
+        prompt: [confirm]
+        answer: "y"
+
+## Wait for Reachability to the device
+
+    - name: Wait for device to come back online
+      ansible.builtin.wait_for:
+        host: "{{ inventory_hostname }}"
+        port: 22
+        delay: 90
+      delegate_to: localhost
+
+## Check current image 
+
+    - name: Check Image Version
+      cisco.ios.ios_facts:
+
+    - name: print
+      debug:
+        msg:
+          - "current IOS version is {{ ansible_net_version }}"
+      
+      vars:
+        upgrade_ios_version: 152-4.S6
+
+    - debug: 
+        msg: 
+          - "Software Upgrade has been completed"
+      when: ansible_net_version == upgrade_ios_version
+      
+      
+
+
+
+
+
+        
+

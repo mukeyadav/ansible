@@ -36,6 +36,6 @@
 
     - name: copy backup to file
       copy:
-        content: "{{ result.stdout[0].split('\n') }}"
+        content: "{{ result.stdout[0]}}"
         dest: "Backups/{{ hostvars.localhost.TD }}/{{ inventory_hostname }}-config.txt"
 
